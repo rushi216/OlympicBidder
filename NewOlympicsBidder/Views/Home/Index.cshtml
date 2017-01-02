@@ -1,0 +1,251 @@
+﻿@using System
+@using System.Globalization
+@using System.Linq
+@using NewOlympicsBidder.Models
+
+@{
+    ViewBag.Title = "Promact Olympics 2017";
+    CultureInfo hindi = new CultureInfo("hi-IN");
+}
+
+<h2>Promact Olympics 2017 - Auction</h2>
+<hr />
+<div class="row">
+    <div class="col-lg-4">
+        <div class="panel panel-default">
+            <div class="panel-heading"><strong>Remaining</strong></div>
+            <div class="panel-body">
+                <ul class="player-list">
+                    @foreach (var participant in ViewBag.RemainingParticipants)
+                    {
+                        var classValue = participant.Id == ViewBag.CurrentParticipant.Id ? "active" : "normal";
+
+                        <li class="@classValue">@participant.Name</li>
+                    }
+                </ul>
+            </div>
+        </div>
+        <br />
+        <div class="panel panel-default">
+            <div class="panel-heading"><strong>Skipped</strong></div>
+            <div class="panel-body">
+                <ul class="player-list">
+                    @foreach (var participant in ViewBag.SkippedParticipants)
+                    {
+                        <li>@participant.Name</li>
+                    }
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-8">
+        <div class="row">
+            <div class="col-lg-4">
+                <div class="panel panel-default current-panel">
+
+                    <div class="panel-heading">
+                        <a class="collapsible" role="button" data-toggle="collapse" data-parent="#accordion" href="#currentSection" aria-expanded="true" aria-controls="collapseOne">
+                            Current
+                        </a>
+                    </div>
+                    <div id="currentSection" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne">
+                        <div class="panel-body">
+                            @if (ViewBag.ShowResetMessage)
+                            {
+                                <span>Please reset round</span>
+                            }
+
+                            else
+                            {
+                                <div>
+                                    <h4>@ViewBag.CurrentParticipant.Name <label class="pull-right" id="expertCount"></label></h4>
+                                    <hr />
+                                    <ul class="current-list"></ul>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+                @if (ViewBag.IsAuthenticated)
+                {
+                    <div class="player-section">
+                        <div class="panel panel-default">
+                            <div class="panel-body">
+                                @if (!ViewBag.ShowResetMessage)
+                                {
+                                    <form action="/Home/Skip">
+                                        <input type="hidden" name="participantId" value="@ViewBag.CurrentParticipant.Id" />
+                                        <input type="submit" value="Skip Player" class="btn btn-primary pull-right" />
+                                        <br />
+                                    </form>
+                                    <br />
+                                    <form action="/Home/Buy">
+                                        <input type="hidden" name="participantId" value="@ViewBag.CurrentParticipant.Id" />
+                                        <div class="form-group">
+                                            <label for="inputvalue">Value</label>
+                                            <input required min="1000000" max="25000000" type="number" class="form-control" name="value" placeholder="value" />
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="inputvalue">Team</label>
+                                            <select name="teamId">
+                                                <option value="1">Team A</option>
+                                                <option value="2">Team B</option>
+                                                <option value="3">Team C</option>
+                                                <option value="4">Team D</option>
+                                            </select>
+                                        </div>
+
+                                        <input type="submit" value="Buy" class="btn btn-primary btn-block" />
+                                    </form>
+                                    <br />
+                                }
+                                <form action="/Home/Reset">
+                                    <input type="submit" value="Reset Round" class="btn btn-default pull-right" />
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+            <div class="col-lg-8">
+                <div class="row">
+                    <div class="col-lg-6">
+                        <div class="panel panel-default">
+                            <div class="panel-heading">Team A</div>
+                            <div class="panel-body">
+                                <table class="table table-bordered">
+                                    @foreach (var participant in ViewBag.TeamAParticipants)
+                                    {
+                                        var classVal = participant.Value >= 25000000 ? "success" : participant.Value >=15000000 ? "warning" : "";
+                                        
+                                        <tr class="@classVal"><td>@participant.Name</td><td>@string.Format(hindi, "{0:#,#}", participant.Value)</td></tr>
+                                    }
+
+                                </table>
+                            </div>
+                            <div class="panel-footer">
+                                <div>
+                                    <strong>Spent: </strong>  @string.Format(hindi, "{0:#,#}", @ViewBag.TeamASpent)
+                                </div>
+                                <div>
+                                    <strong>Remaining: </strong> @string.Format(hindi, "{0:#,#}", (ViewBag.AllocatedAmount - @ViewBag.TeamASpent))
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="panel panel-default">
+                            <div class="panel-heading">Team B</div>
+                            <div class="panel-body">
+                                <table class="table table-bordered">
+                                    @foreach (var participant in ViewBag.TeamBParticipants)
+                                    {
+                                        var classVal = participant.Value >= 25000000 ? "success" : participant.Value >= 15000000 ? "warning" : "";
+
+                                        <tr class="@classVal"><td>@participant.Name</td><td>@string.Format(hindi, "{0:#,#}", participant.Value)</td></tr>
+                                    }
+
+                                </table>
+                            </div>
+                            <div class="panel-footer">
+                                <div>
+                                    <strong> Spent:</strong> @string.Format(hindi, "{0:#,#}", @ViewBag.TeamBSpent)
+                                </div>
+                                <div>
+                                    <strong> Remaining:</strong> @string.Format(hindi, "{0:#,#}", (ViewBag.AllocatedAmount - @ViewBag.TeamBSpent))
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-6">
+                        <div class="panel panel-default">
+                            <div class="panel-heading">Team C</div>
+                            <div class="panel-body">
+                                <table class="table table-bordered">
+                                    @foreach (var participant in ViewBag.TeamCParticipants)
+                                    {
+                                        var classVal = participant.Value >= 25000000 ? "success" : participant.Value >= 15000000 ? "warning" : "";
+
+                                        <tr class="@classVal"><td>@participant.Name</td><td>@string.Format(hindi, "{0:#,#}", participant.Value)</td></tr>
+                                    }
+
+                                </table>
+                            </div>
+                            <div class="panel-footer">
+                                <div>
+                                    <strong> Spent:</strong> @string.Format(hindi, "{0:#,#}", @ViewBag.TeamCSpent)
+                                </div>
+                                <div>
+                                    <strong> Remaining:</strong> @string.Format(hindi, "{0:#,#}", (ViewBag.AllocatedAmount - @ViewBag.TeamCSpent))
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="panel panel-default">
+                            <div class="panel-heading">Team D</div>
+                            <div class="panel-body">
+                                <table class="table table-bordered">
+                                    @foreach (var participant in ViewBag.TeamDParticipants)
+                                    {
+                                        var classVal = participant.Value >= 25000000 ? "success" : participant.Value >= 15000000 ? "warning" : "";
+
+                                        <tr class="@classVal"><td>@participant.Name</td><td>@string.Format(hindi, "{0:#,#}", participant.Value)</td></tr>
+                                    }
+
+                                </table>
+                            </div>
+                            <div class="panel-footer">
+                                <div>
+                                    <strong> Spent:</strong> @string.Format(hindi, "{0:#,#}", @ViewBag.TeamDSpent)
+                                </div>
+                                <div>
+                                    <strong> Remaining:</strong>@string.Format(hindi, "{0:#,#}", (ViewBag.AllocatedAmount - @ViewBag.TeamDSpent))
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts{
+    <script>
+
+        @{ 
+            var currentExpertise = ViewBag.CurrentParticipant != null ? @Html.Raw(ViewBag.CurrentParticipant.Expertise) : "{}";
+        }
+
+        var currentExpertise = @currentExpertise;
+
+        var expertCount = 0;
+        var moderateCount = 0;
+        var beginnerCount = 0;
+
+        for(var prop in currentExpertise){
+            if(prop != "Name"){
+                $(".current-list").append("<li>" + "<strong>"+ prop +":</strong>"+ "  " + currentExpertise[prop] + "</li>");
+            }
+
+            switch(currentExpertise[prop]){
+                case "Expert":
+                    expertCount++;
+                    break;
+                case "Moderate":
+                    moderateCount++;
+                    break;
+                case "Beginner":
+                    beginnerCount++;
+                    break;
+            }
+        }
+
+        $("#expertCount").append("<b>E</b>:" +expertCount + "   <b>M</b>:" + moderateCount + "   <b>B</b>:" + beginnerCount);
+
+
+    </script>
+}

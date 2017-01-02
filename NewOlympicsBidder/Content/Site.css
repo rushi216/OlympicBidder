@@ -1,0 +1,29 @@
+﻿/* Set padding to keep content from hitting the edges */
+.body-content { padding-left: 15px; padding-right: 15px; }
+
+/* Override the default bootstrap behavior where horizontal description lists 
+   will truncate terms that are too long to fit in the left column 
+*/
+.dl-horizontal dt { white-space: normal; }
+
+/* Set width on the form input elements since they're 100% wide by default */
+input,
+select,
+textarea { max-width: 300px; }
+.player-list { padding: 0; list-style: none; margin: 0; }
+.player-list li { padding: 3px 5px; width: 33%; display: inline-block; text-transform: capitalize;    border: 1px solid #e2e2e2;
+    text-align: center;float:left; }
+.panel-heading { font-size: 16px; font-weight: bold;    text-align: center; }
+.current-list { list-style: square;    padding-left: 17px;
+    margin-top: 20px; }
+.current-list li { margin: 3px 0; }
+.team-list { padding: 0px; list-style: none; margin: 0; }
+.team-list li { margin: 5px 0; }
+li.active { color: rgb(240, 240, 240); background-color: #439639;     border-color: #439639;}
+select { width: 100%; display: block; padding: 7px; border-color: #d7d5d5; border-radius: 3px; }
+.container { max-width: 95% !important; }
+label{font-weight:normal;}
+.current-panel .panel-body{background: #d6e9c6;}
+.current-panel .panel-heading{background: #87b75c;color:#fff;}
+.collapsible { display: block; text-decoration: none; color: inherit; }
+a:hover, a:focus { color: inherit; text-decoration: none; }
